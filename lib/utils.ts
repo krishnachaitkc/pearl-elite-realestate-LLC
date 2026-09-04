@@ -6,26 +6,41 @@ import { prisma } from "@/lib/db";
  * Use this to read phone numbers, WhatsApp, logo, etc. dynamically.
  */
 export async function getSettings(): Promise<Record<string, string>> {
-  const settings = await prisma.siteSetting.findMany();
-  return Object.fromEntries(settings.map((s) => [s.key, s.value]));
+  try {
+    const settings = await prisma.siteSetting.findMany();
+    return Object.fromEntries(settings.map((s) => [s.key, s.value]));
+  } catch (error) {
+    console.error("Error fetching settings:", error);
+    return {};
+  }
 }
 
 /**
  * Get a single setting by key
  */
 export async function getSetting(key: string): Promise<string> {
-  const setting = await prisma.siteSetting.findUnique({ where: { key } });
-  return setting?.value ?? "";
+  try {
+    const setting = await prisma.siteSetting.findUnique({ where: { key } });
+    return setting?.value ?? "";
+  } catch (error) {
+    console.error(`Error fetching setting ${key}:`, error);
+    return "";
+  }
 }
 
 /**
  * Fetch homepage sections as a key-value map, optionally filtered by key prefix.
  */
 export async function getHomepageSections(prefix?: string): Promise<Record<string, string>> {
-  const sections = await prisma.homepageSection.findMany(
-    prefix ? { where: { key: { startsWith: prefix } } } : undefined
-  );
-  return Object.fromEntries(sections.map((s) => [s.key, s.value]));
+  try {
+    const sections = await prisma.homepageSection.findMany(
+      prefix ? { where: { key: { startsWith: prefix } } } : undefined
+    );
+    return Object.fromEntries(sections.map((s) => [s.key, s.value]));
+  } catch (error) {
+    console.error("Error fetching homepage sections:", error);
+    return {};
+  }
 }
 
 /**

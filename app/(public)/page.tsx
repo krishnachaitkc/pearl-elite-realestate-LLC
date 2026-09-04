@@ -24,9 +24,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  // Fetch all data in parallel (server-side, no API round-trips)
-  const [settings, homepageSections, featuredProperties, locations, agents, testimonials, articles] =
-    await Promise.all([
+  let settings: Record<string, string> = {};
+  let homepageSections: any[] = [];
+  let featuredProperties: any[] = [];
+  let locations: any[] = [];
+  let agents: any[] = [];
+  let testimonials: any[] = [];
+  let articles: any[] = [];
+
+  try {
+    const results = await Promise.all([
       getSettings(),
       prisma.homepageSection.findMany(),
       prisma.property.findMany({
@@ -62,6 +69,17 @@ export default async function HomePage() {
         take: 3,
       }),
     ]);
+
+    settings = results[0] || {};
+    homepageSections = results[1] || [];
+    featuredProperties = results[2] || [];
+    locations = results[3] || [];
+    agents = results[4] || [];
+    testimonials = results[5] || [];
+    articles = results[6] || [];
+  } catch (error) {
+    console.error("Error loading homepage data:", error);
+  }
 
   // Build section map
   const sections: Record<string, string> = {};
