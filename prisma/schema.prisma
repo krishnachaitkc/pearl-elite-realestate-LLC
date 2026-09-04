@@ -1,0 +1,429 @@
+// This is your Prisma schema file
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// USERS & AUTH
+// ============================================================
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+}
+
+// ============================================================
+// SITE SETTINGS (key-value store for all editable settings)
+// ============================================================
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  label     String?
+  group     String?  @default("general")
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// ============================================================
+// PROPERTIES
+// ============================================================
+
+model Property {
+  id             String           @id @default(cuid())
+  slug           String           @unique
+  title          String
+  titleAr        String?
+  description    String           @db.Text
+  descriptionAr  String?          @db.Text
+  price          Decimal          @db.Decimal(15, 2)
+  priceType      PriceType        @default(SALE)
+  status         PropertyStatus   @default(READY)
+  featured       Boolean          @default(false)
+  published      Boolean          @default(false)
+  bedrooms       Int?
+  bathrooms      Int?
+  area           Decimal?         @db.Decimal(10, 2)
+  propertyType   PropertyType
+  furnished      FurnishedStatus?
+  referenceNo    String           @unique
+  completionDate DateTime?
+  paymentPlan    String?          @db.Text
+  floorPlanUrl   String?
+  videoUrl       String?
+  latitude       Decimal?         @db.Decimal(10, 7)
+  longitude      Decimal?         @db.Decimal(10, 7)
+  seoTitle       String?
+  seoDescription String?
+  viewCount      Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  locationId  String?
+  location    Location?   @relation(fields: [locationId], references: [id])
+  communityId String?
+  community   Community?  @relation(fields: [communityId], references: [id])
+  developerId String?
+  developer   Developer?  @relation(fields: [developerId], references: [id])
+  agentId     String?
+  agent       Agent?      @relation(fields: [agentId], references: [id])
+
+  images    PropertyImage[]
+  amenities PropertyAmenity[]
+  enquiries Enquiry[]
+
+  @@index([slug])
+  @@index([published, featured])
+  @@index([priceType, propertyType])
+  @@index([locationId])
+  @@index([communityId])
+  @@map("properties")
+}
+
+enum PriceType {
+  SALE
+  RENT
+}
+
+enum PropertyStatus {
+  READY
+  OFF_PLAN
+}
+
+enum PropertyType {
+  APARTMENT
+  VILLA
+  TOWNHOUSE
+  PENTHOUSE
+  PLOT
+  OFFICE
+  RETAIL
+  WAREHOUSE
+  DUPLEX
+}
+
+enum FurnishedStatus {
+  FURNISHED
+  UNFURNISHED
+  SEMI_FURNISHED
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url        String
+  publicId   String?
+  altText    String?
+  order      Int      @default(0)
+  isMain     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([propertyId, order])
+  @@map("property_images")
+}
+
+model Amenity {
+  id         String            @id @default(cuid())
+  name       String            @unique
+  icon       String?
+  category   String?
+  properties PropertyAmenity[]
+
+  @@map("amenities")
+}
+
+model PropertyAmenity {
+  propertyId String
+  amenityId  String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenity    Amenity  @relation(fields: [amenityId], references: [id])
+
+  @@id([propertyId, amenityId])
+  @@map("property_amenities")
+}
+
+// ============================================================
+// LOCATIONS & COMMUNITIES
+// ============================================================
+
+model Location {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  nameAr         String?
+  description    String?   @db.Text
+  imageUrl       String?
+  latitude       Decimal?  @db.Decimal(10, 7)
+  longitude      Decimal?  @db.Decimal(10, 7)
+  highlights     String[]
+  seoTitle       String?
+  seoDescription String?
+  published      Boolean   @default(true)
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  properties  Property[]
+  communities Community[]
+
+  @@index([slug, published])
+  @@map("locations")
+}
+
+model Community {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  name           String
+  nameAr         String?
+  description    String?   @db.Text
+  imageUrl       String?
+  latitude       Decimal?  @db.Decimal(10, 7)
+  longitude      Decimal?  @db.Decimal(10, 7)
+  highlights     String[]
+  seoTitle       String?
+  seoDescription String?
+  published      Boolean   @default(true)
+  order          Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  locationId String?
+  location   Location?  @relation(fields: [locationId], references: [id])
+  properties Property[]
+
+  @@index([slug, published])
+  @@map("communities")
+}
+
+// ============================================================
+// DEVELOPERS
+// ============================================================
+
+model Developer {
+  id             String     @id @default(cuid())
+  slug           String     @unique
+  name           String
+  logoUrl        String?
+  description    String?    @db.Text
+  website        String?
+  featured       Boolean    @default(false)
+  published      Boolean    @default(true)
+  images         String[]
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  properties Property[]
+
+  @@index([slug, published])
+  @@map("developers")
+}
+
+// ============================================================
+// AGENTS
+// ============================================================
+
+model Agent {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  photoUrl    String?
+  bio         String?  @db.Text
+  designation String?
+  phone       String?
+  whatsapp    String?
+  email       String?
+  languages   String[]
+  featured    Boolean  @default(false)
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  properties Property[]
+  enquiries  Enquiry[]
+
+  @@index([slug, active])
+  @@map("agents")
+}
+
+// ============================================================
+// ENQUIRIES / LEADS
+// ============================================================
+
+model Enquiry {
+  id        String        @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  message   String?       @db.Text
+  type      EnquiryType   @default(GENERAL)
+  source    String?
+  status    EnquiryStatus @default(NEW)
+  notes     String?       @db.Text
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  propertyId String?
+  property   Property? @relation(fields: [propertyId], references: [id])
+  agentId    String?
+  agent      Agent?    @relation(fields: [agentId], references: [id])
+
+  @@index([status, createdAt])
+  @@index([propertyId])
+  @@map("enquiries")
+}
+
+enum EnquiryType {
+  GENERAL
+  PROPERTY
+  AGENT
+  VIEWING
+  CALLBACK
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  VIEWING_SCHEDULED
+  CLOSED
+  NOT_INTERESTED
+}
+
+// ============================================================
+// BLOG / ARTICLES
+// ============================================================
+
+model Article {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  title          String
+  excerpt        String?   @db.Text
+  content        String    @db.Text
+  coverImageUrl  String?
+  published      Boolean   @default(false)
+  featured       Boolean   @default(false)
+  seoTitle       String?
+  seoDescription String?
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([slug, published])
+  @@map("articles")
+}
+
+// ============================================================
+// TESTIMONIALS
+// ============================================================
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String?
+  content   String   @db.Text
+  rating    Int      @default(5)
+  photoUrl  String?
+  featured  Boolean  @default(false)
+  published Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+// ============================================================
+// FAQs
+// ============================================================
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  category  String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faqs")
+}
+
+// ============================================================
+// OFFICE LOCATIONS
+// ============================================================
+
+model OfficeLocation {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  phone     String?
+  email     String?
+  latitude  Decimal? @db.Decimal(10, 7)
+  longitude Decimal? @db.Decimal(10, 7)
+  hours     String?
+  isPrimary Boolean  @default(false)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("office_locations")
+}
+
+// ============================================================
+// HOMEPAGE SECTIONS (editable content blocks)
+// ============================================================
+
+model HomepageSection {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+
+  @@map("homepage_sections")
+}
+
+// ============================================================
+// MEDIA LIBRARY
+// ============================================================
+
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String   @unique
+  filename  String
+  format    String?
+  width     Int?
+  height    Int?
+  bytes     Int?
+  folder    String?
+  altText   String?
+  createdAt DateTime @default(now())
+
+  @@map("media")
+}

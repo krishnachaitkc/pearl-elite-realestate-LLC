@@ -1,0 +1,486 @@
+@import "tailwindcss";
+
+/* ============================================================
+   PEARL GATE ELITE — Design System
+   Premium UAE Real Estate Brand
+   ============================================================ */
+
+@theme {
+  /* Brand Palette */
+  --color-brand-50:  #f7f3ee;
+  --color-brand-100: #ece3d4;
+  --color-brand-200: #d9c7a9;
+  --color-brand-300: #c4a87a;
+  --color-brand-400: #b38f55;
+  --color-brand-500: #9d7a3e;  /* Primary gold */
+  --color-brand-600: #856435;
+  --color-brand-700: #6b4f2a;
+  --color-brand-800: #553d22;
+  --color-brand-900: #40301b;
+
+  --color-charcoal-50:  #f6f6f6;
+  --color-charcoal-100: #e7e7e7;
+  --color-charcoal-200: #d1d1d1;
+  --color-charcoal-300: #b0b0b0;
+  --color-charcoal-400: #888888;
+  --color-charcoal-500: #6d6d6d;
+  --color-charcoal-600: #5d5d5d;
+  --color-charcoal-700: #4f4f4f;
+  --color-charcoal-800: #2e2e2e;
+  --color-charcoal-900: #1a1a1a;  /* Near black */
+
+  --color-cream: #faf8f5;
+  --color-cream-dark: #f2ede7;
+
+  /* Typography */
+  --font-sans:    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif:   var(--font-playfair), Georgia, "Times New Roman", serif;
+  --font-mono:    var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Spacing */
+  --spacing-section: 5rem;
+
+  /* Border Radius */
+  --radius-sm:   0.25rem;
+  --radius-md:   0.5rem;
+  --radius-lg:   0.75rem;
+  --radius-xl:   1rem;
+  --radius-2xl:  1.5rem;
+
+  /* Shadows */
+  --shadow-card:    0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.07);
+  --shadow-card-hover: 0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+  --shadow-modal:   0 20px 60px -15px rgb(0 0 0 / 0.3);
+
+  /* Transitions */
+  --transition-base: all 0.2s ease;
+  --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--color-charcoal-900);
+  color: white;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+.heading-display {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.heading-section {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.text-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+
+/* Gold divider line used in section headers */
+.divider-gold {
+  display: block;
+  width: 3rem;
+  height: 2px;
+  background-color: var(--color-brand-500);
+  margin: 1rem auto;
+}
+
+.divider-gold-left {
+  display: block;
+  width: 3rem;
+  height: 2px;
+  background-color: var(--color-brand-500);
+  margin: 1rem 0;
+}
+
+/* Premium card base */
+.card-premium {
+  background: var(--color-charcoal-800);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-smooth);
+}
+
+.card-premium:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
+}
+
+/* Button styles */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background-color: var(--color-brand-500);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  border-radius: var(--radius-md);
+  transition: var(--transition-base);
+  cursor: pointer;
+  border: 2px solid transparent;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-brand-600);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background-color: transparent;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  border-radius: var(--radius-md);
+  transition: var(--transition-base);
+  cursor: pointer;
+  border: 2px solid var(--color-charcoal-200);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-brand-500);
+  color: var(--color-brand-500);
+}
+
+.btn-outline-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background-color: transparent;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  border-radius: var(--radius-md);
+  transition: var(--transition-base);
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.6);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-outline-white:hover {
+  background-color: white;
+  color: white;
+  border-color: white;
+}
+
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background-color: #25D366;
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: var(--radius-md);
+  transition: var(--transition-base);
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-whatsapp:hover {
+  background-color: #1da851;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+
+@layer components {
+  .input-base {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: white;
+  background: var(--color-charcoal-800);
+  transition: border-color 0.15s ease;
+  outline: none;
+}
+
+.input-base:focus {
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgb(157 122 62 / 0.12);
+}
+
+.input-base::placeholder {
+  color: var(--color-charcoal-400);
+}
+}
+
+/* ============================================================
+   PROPERTY BADGE
+   ============================================================ */
+
+.badge-for-sale {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-for-rent {
+  background-color: #dcfce7;
+  color: #15803d;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-off-plan {
+  background-color: #fef3c7;
+  color: #d97706;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.badge-featured {
+  background-color: var(--color-brand-500);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   SECTION UTILITIES
+   ============================================================ */
+
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.section-padding-sm {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.container-site {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .container-site {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-site {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* ============================================================
+   FLOATING WHATSAPP BUTTON
+   ============================================================ */
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 9999px;
+  background-color: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgb(37 211 102 / 0.4);
+  transition: var(--transition-smooth);
+  text-decoration: none;
+}
+
+.whatsapp-float:hover {
+  background-color: #1da851;
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgb(37 211 102 / 0.5);
+}
+
+/* ============================================================
+   ADMIN STYLES
+   ============================================================ */
+
+.admin-sidebar {
+  background: var(--color-charcoal-900);
+  color: white;
+}
+
+.admin-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-charcoal-300);
+  transition: var(--transition-base);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-sidebar-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+.admin-sidebar-item.active {
+  background: rgba(157,122,62,0.2);
+  color: var(--color-brand-300);
+}
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-charcoal-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-charcoal-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-charcoal-400);
+}
+
+/* ============================================================
+   IMAGE ASPECT RATIOS
+   ============================================================ */
+
+.aspect-property-card {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-hero {
+  aspect-ratio: 16 / 9;
+}
+
+/* ============================================================
+   RTL SUPPORT PREPARATION
+   ============================================================ */
+
+[dir="rtl"] .divider-gold-left {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+
+
+
