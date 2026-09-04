@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { sendEnquiryNotification } from "@/lib/email";
 import { enquirySchema } from "@/lib/validations";
 
 // Rate limiting — simple in-memory (use Redis in production)
@@ -55,7 +56,11 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // TODO: send email notification (Phase 8)
+    try {
+      await sendEnquiryNotification(parsed.data, enquiry.id);
+    } catch (emailError) {
+      console.error("[ENQUIRY_POST] Email notification failed:", emailError);
+    }
 
     return NextResponse.json(
       { success: true, id: enquiry.id },

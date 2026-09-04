@@ -32,7 +32,7 @@ async function main() {
     { key: "phone_secondary", value: "0581718701", label: "Secondary Phone", group: "contact" },
     { key: "whatsapp_number", value: "971545005113", label: "WhatsApp Number (with country code)", group: "contact" },
     { key: "email_primary", value: "info@pearlgateelite.com", label: "Primary Email", group: "contact" },
-    { key: "email_enquiries", value: "enquiries@pearlgateelite.com", label: "Enquiries Email", group: "contact" },
+    { key: "email_enquiries", value: "info@pearlgateelite.com", label: "Enquiries Email", group: "contact" },
     { key: "address", value: "Dubai, United Arab Emirates", label: "Address", group: "contact" },
     { key: "logo_url", value: "", label: "Logo URL", group: "branding" },
     { key: "favicon_url", value: "", label: "Favicon URL", group: "branding" },
